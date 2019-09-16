@@ -6,6 +6,7 @@ use serde_yaml::from_reader;
 
 use crate::error::Error;
 
+#[derive(Debug, Default, Clone)]
 pub struct Antennas {
     aliaces: BTreeMap<String, String>,
     dict: BTreeMap<String, Antenna>,
@@ -13,11 +14,12 @@ pub struct Antennas {
 
 impl Antennas {
     pub fn new() -> Antennas {
-        let mut res = Antennas{
+        let mut res = Antennas {
             aliaces: BTreeMap::new(),
             dict: BTreeMap::new(),
         };
-        res.load(&include_bytes!("../resources/antennas.yaml")[..]).unwrap();
+        res.load(&include_bytes!("../resources/antennas.yaml")[..])
+            .unwrap();
         res
     }
 
@@ -45,7 +47,7 @@ impl Antennas {
     pub fn print_all(&self, indent: &str) {
         for (_, a) in self.dict.iter() {
             print!("{}{}", indent, a.name);
-            if ! a.aliases.is_empty() {
+            if !a.aliases.is_empty() {
                 print!(" (");
                 for (i, al) in a.aliases.iter().enumerate() {
                     if i > 0 {
@@ -70,7 +72,7 @@ pub struct Antenna {
     pub combine_exp: f64,
     pub relay: bool,
     #[serde(default)]
-    pub is_dsn: bool
+    pub is_dsn: bool,
 }
 
 fn default_combine_exp() -> f64 {

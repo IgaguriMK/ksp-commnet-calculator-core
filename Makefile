@@ -1,4 +1,4 @@
-CRATE_NAME:=jsq
+CRATE_NAME:=ksp-commnet-calculator
 
 DOC_OPTION:=--no-deps
 

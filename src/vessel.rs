@@ -1,7 +1,9 @@
+use std::collections::BTreeMap;
 use std::fmt;
 
 use crate::antenna::Antenna;
 
+#[derive(Debug, Default, Clone)]
 pub struct Vessel {
     antennas: Vec<Antenna>,
     is_dsn: bool,
@@ -39,8 +41,19 @@ impl Vessel {
             println!("{}Vessel:", indent);
         }
 
+        let mut antennas = BTreeMap::<String, usize>::new();
         for a in &self.antennas {
-            println!("{}{}{}", indent, indent, a.name);
+            antennas
+                .entry(a.name.clone())
+                .and_modify(|c| *c += 1)
+                .or_insert(1);
+        }
+        for (n, c) in antennas.into_iter() {
+            if c == 1 {
+                println!("{}{}{}", indent, indent, n);
+            } else {
+                println!("{}{}{}x {}", indent, indent, c, n);
+            }
         }
     }
 
@@ -83,7 +96,7 @@ pub struct Range {
 }
 
 impl Range {
-    pub fn max_distance(&self) -> f64 {
+    pub fn max_distance(self) -> f64 {
         self.distance
     }
 

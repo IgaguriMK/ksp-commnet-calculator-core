@@ -1,24 +1,42 @@
-use clap::{App, Arg, crate_name, crate_authors, crate_version};
+use clap::{crate_authors, crate_name, crate_version, App, Arg};
 
-use ksp_commnet_simulator::error::{Error, MessageError};
-use ksp_commnet_simulator::antenna::{Antennas, Antenna};
-use ksp_commnet_simulator::vessel::Vessel;
-use ksp_commnet_simulator::distance::distances;
+use ksp_commnet_calculator::antenna::{Antenna, Antennas};
+use ksp_commnet_calculator::distance::distances;
+use ksp_commnet_calculator::error::{Error, MessageError};
+use ksp_commnet_calculator::vessel::Vessel;
 
 fn main() {
     if let Err(e) = w_main() {
         eprintln!("Error: {}", e);
         std::process::exit(1);
-    } 
+    }
 }
 
 fn w_main() -> Result<(), Error> {
     let matches = App::new(crate_name!())
         .author(crate_authors!("\n"))
         .version(crate_version!())
-        .arg(Arg::with_name("from").short("f").long("from").multiple(true).takes_value(true).default_value("DSN Lv.3"))
-        .arg(Arg::with_name("to").short("t").long("to").multiple(true).takes_value(true))
-        .arg(Arg::with_name("antennas").long("antennas").help("Print antennas"))
+        .arg(
+            Arg::with_name("from")
+                .short("f")
+                .long("from")
+                .multiple(true)
+                .takes_value(true)
+                .default_value("DSN Lv.3"),
+        )
+        .arg(
+            Arg::with_name("to")
+                .short("t")
+                .long("to")
+                .multiple(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("antennas")
+                .short("A")
+                .long("antennas")
+                .help("Print antennas"),
+        )
         .get_matches();
 
     let antennas = Antennas::new();
@@ -70,15 +88,23 @@ fn parse_antenna_arg(antennas: &Antennas, s: &str) -> Result<(Antenna, usize), E
 
     match parts.len() {
         1 => {
-            let a = antennas.get(parts[0]).ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
+            let a = antennas
+                .get(parts[0])
+                .ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
             Ok((a.clone(), 1))
         }
         2 => {
-            let a = antennas.get(parts[0]).ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
+            let a = antennas
+                .get(parts[0])
+                .ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
             let n = parts[1].parse()?;
             Ok((a.clone(), n))
         }
-        _ => Err(MessageError::new(format!("antenna specifier should be [<NUMBER_OF_ANTENNA>:]<ANTENNA_NAME>, but {}", s)).into()),
+        _ => Err(MessageError::new(format!(
+            "antenna specifier should be [<NUMBER_OF_ANTENNA>:]<ANTENNA_NAME>, but {}",
+            s
+        ))
+        .into()),
     }
 }
 
