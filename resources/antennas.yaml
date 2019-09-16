@@ -1,0 +1,97 @@
+-
+  name: DSN Lv.1
+  aliases:
+    - DSN1
+  power: 2000000000
+  combine: false
+  combineexp: 0.0
+  relay: false
+  is_dsn: true
+-
+  name: DSN Lv.2
+  aliases:
+    - DSN2
+  power: 50000000000
+  combine: false
+  combineexp: 0.0
+  relay: false
+  is_dsn: true
+-
+  name: DSN Lv.3
+  aliases:
+    - DSN3
+  power: 250000000000
+  combine: false
+  combineexp: 0.0
+  relay: false
+  is_dsn: true
+-
+  name: Communotron 16
+  aliases:
+    - "16"
+    - C16
+    - Comm16
+  power: 500000
+  combine: true
+  combineexp: 1.0
+  relay: false
+-
+  name: Communotron 16-S
+  aliases:
+    - 16S
+    - 16-S
+    - C16-S
+    - Comm16-S
+  power: 500000
+  combine: false
+  combineexp: 0.0
+  relay: false
+-
+  name: Communotron DTS-M1
+  aliases:
+    - DTS-M1
+  power: 2000000000
+  combine: true
+  relay: false
+-
+  name: Communotron HG-55
+  aliases:
+    - HG-55
+  power: 15000000000
+  combine: true
+  relay: false
+-
+  name: Communotron 88-88
+  aliases:
+    - 88-88
+  power: 100000000000
+  combine: true
+  relay: false
+-
+  name: HG-5 High Gain Antenna
+  aliases:
+    - HG-5
+  power: 5000000
+  combine: true
+  relay: true
+-
+  name: RA-2 Relay Antenna
+  aliases:
+    - RA-2
+  power: 2000000000
+  combine: true
+  relay: true
+-
+  name: RA-15 Relay Antenna
+  aliases:
+    - RA-15
+  power: 15000000000
+  combine: true
+  relay: true
+-
+  name: RA-105 Relay Antenna
+  aliases:
+    - RA-100
+  power: 100000000000
+  combine: true
+  relay: true

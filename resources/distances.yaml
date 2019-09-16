@@ -1,0 +1,52 @@
+-
+  section: Kerbin (80km)
+  min: 80000
+  max: 380000
+-
+  section: Kerbin (250km)
+  min: 250000
+  max: 550000
+-
+  section: Kerbin GEO (2863.3km)
+  min: 2863330
+  max: 3163330
+-
+  section: Kerbin-Mun
+  min: 12000000
+  max: 12000000
+-
+  section: Kerbin-Minmus
+  min: 47000000
+  max: 47000000
+-
+  section: Kerbin SOI
+  min: 84159286
+  max: 84159286
+-
+  section: Kerbin-Eve
+  min: 3668849279
+  max: 23530846762
+-
+  section: Kerbin-Duna
+  min: 6069326656
+  max: 35382969611
+-
+  section: Kerbin-Moho
+  min: 7289425429
+  max: 19913521207
+-
+  section: Kerbin-Sun
+  min: 13599840256
+  max: 13599840256
+-
+  section: Kerbin-Dres
+  min: 21402643773
+  max: 60320718559
+-
+  section: Kerbin-Jool
+  min: 51735045694
+  max: 85811947570
+-
+  section: Kerbin-Eeloo
+  min: 53183635668
+  max: 127081708938
