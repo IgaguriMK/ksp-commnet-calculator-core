@@ -2,7 +2,7 @@ use serde::Deserialize;
 use serde_yaml::from_reader;
 
 pub fn distances() -> Vec<Distance> {
-    from_reader(&include_bytes!("../resources/distances.yaml")[..]).unwrap()
+    from_reader(&include_bytes!("../../resources/distances.yaml")[..]).unwrap()
 }
 
 #[derive(Debug, Clone, Deserialize)]
