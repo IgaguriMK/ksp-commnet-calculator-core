@@ -1,9 +1,11 @@
 use clap::{crate_authors, crate_name, crate_version, App, Arg};
 
-use ksp_commnet_calculator::antenna::{Antenna, Antennas};
-use ksp_commnet_calculator::distance::distances;
 use ksp_commnet_calculator::error::{Error, MessageError};
-use ksp_commnet_calculator::vessel::Vessel;
+use ksp_commnet_calculator::model::vessel::EndpointInfo;
+use ksp_commnet_calculator::usecase::distance::{Output, Runner};
+use ksp_commnet_calculator::util::MetricPrefix;
+
+const INDENT: &str = "    ";
 
 fn main() {
     if let Err(e) = w_main() {
@@ -39,72 +41,77 @@ fn w_main() -> Result<(), Error> {
         )
         .get_matches();
 
-    let antennas = Antennas::new();
+    let mut runner = Runner::new();
 
     if matches.is_present("antennas") {
-        println!("Available antennas:");
-        antennas.print_all("    ");
+        runner.antenna_list();
         return Ok(());
     }
 
-    let mut from_vessel = Vessel::new();
     for antenna_str in matches.values_of("from").unwrap_or_default() {
-        let (a, n) = parse_antenna_arg(&antennas, antenna_str)?;
-        from_vessel.add_antenna(a, n);
+        let (c, n) = split_antenna_arg(antenna_str)?;
+        runner.add_from_vessel_antenna(c, n)?;
     }
 
-    let mut to_vessel = Vessel::new();
     for antenna_str in matches.values_of("to").unwrap_or_default() {
-        let (a, n) = parse_antenna_arg(&antennas, antenna_str)?;
-        to_vessel.add_antenna(a, n);
+        let (c, n) = split_antenna_arg(antenna_str)?;
+        runner.add_to_vessel_antenna(c, n)?;
     }
 
-    println!("From:");
-    from_vessel.print("    ");
-    println!("To:");
-    to_vessel.print("    ");
-    println!();
-
-    let range = from_vessel.range_to(&to_vessel);
-    println!("Max distance: {}", range);
-    println!();
-
-    println!("|          Section          |   @Min   |   @Max   |");
-    println!("|:--------------------------|---------:|---------:|");
-    for d in distances() {
-        println!(
-            "| {:<25} | {:>8} | {:>8} |",
-            d.section,
-            format_strength(range.strength_at(d.min)),
-            format_strength(range.strength_at(d.max)),
-        );
-    }
+    let output = runner.run()?;
+    print_res(&output);
 
     Ok(())
 }
 
-fn parse_antenna_arg(antennas: &Antennas, s: &str) -> Result<(Antenna, usize), Error> {
+fn split_antenna_arg(s: &str) -> Result<(usize, &str), Error> {
     let parts: Vec<&str> = s.split(':').collect();
 
     match parts.len() {
-        1 => {
-            let a = antennas
-                .get(parts[0])
-                .ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
-            Ok((a.clone(), 1))
-        }
+        1 => Ok((1, parts[0])),
         2 => {
-            let a = antennas
-                .get(parts[0])
-                .ok_or_else(|| MessageError::new(format!("unknown antenna: {}", parts[0])))?;
             let n = parts[1].parse()?;
-            Ok((a.clone(), n))
+            Ok((n, parts[0]))
         }
         _ => Err(MessageError::new(format!(
             "antenna specifier should be [<NUMBER_OF_ANTENNA>:]<ANTENNA_NAME>, but {}",
             s
         ))
         .into()),
+    }
+}
+
+fn print_res(res: &Output) {
+    println!("From:");
+    print_endpoint(&res.endpoints.from);
+    println!("To:");
+    print_endpoint(&res.endpoints.to);
+    println!();
+
+    println!("Max distance: {}m", MetricPrefix(res.max_distance));
+    println!();
+
+    println!("|          Section          |   @Min   |   @Max   |");
+    println!("|:--------------------------|---------:|---------:|");
+    for strength in &res.signal_strengthes {
+        println!(
+            "| {:<25} | {:>8} | {:>8} |",
+            strength.section,
+            format_strength(strength.at_min),
+            format_strength(strength.at_max),
+        );
+    }
+}
+
+fn print_endpoint(endpoint: &EndpointInfo) {
+    println!("{}:", endpoint.endpoint_type);
+
+    for (c, a) in &endpoint.antennas {
+        if *c == 1 {
+            println!("{}{}{}", INDENT, INDENT, a.name);
+        } else {
+            println!("{}{}{}x {}", INDENT, INDENT, *c, a.name);
+        }
     }
 }
 

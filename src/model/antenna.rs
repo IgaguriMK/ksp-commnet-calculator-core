@@ -18,7 +18,7 @@ impl Antennas {
             aliaces: BTreeMap::new(),
             dict: BTreeMap::new(),
         };
-        res.load(&include_bytes!("../resources/antennas.yaml")[..])
+        res.load(&include_bytes!("../../resources/antennas.yaml")[..])
             .unwrap();
         res
     }

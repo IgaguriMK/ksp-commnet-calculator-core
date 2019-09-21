@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
-use crate::antenna::Antenna;
+use crate::model::antenna::Antenna;
 
 #[derive(Debug, Default, Clone)]
 pub struct Vessel {
@@ -34,26 +34,22 @@ impl Vessel {
         self.antennas.push(antenna);
     }
 
-    pub fn print(&self, indent: &str) {
-        if self.is_dsn {
-            println!("{}DSN:", indent);
-        } else {
-            println!("{}Vessel:", indent);
+    pub fn info(&self) -> EndpointInfo {
+        let endpoint_type = if self.is_dsn { "DSN" } else { "Vessel" };
+
+        let mut counts = BTreeMap::<String, (usize, Antenna)>::new();
+        for a in &self.antennas {
+            counts
+                .entry(a.name.clone())
+                .and_modify(|(c, _)| *c += 1)
+                .or_insert((1, a.clone()));
         }
 
-        let mut antennas = BTreeMap::<String, usize>::new();
-        for a in &self.antennas {
-            antennas
-                .entry(a.name.clone())
-                .and_modify(|c| *c += 1)
-                .or_insert(1);
-        }
-        for (n, c) in antennas.into_iter() {
-            if c == 1 {
-                println!("{}{}{}", indent, indent, n);
-            } else {
-                println!("{}{}{}x {}", indent, indent, c, n);
-            }
+        let antennas = counts.into_iter().map(|v| v.1).collect();
+
+        EndpointInfo {
+            endpoint_type,
+            antennas,
         }
     }
 
@@ -125,4 +121,10 @@ impl fmt::Display for Range {
             write!(f, "{:.2} m", d)
         }
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct EndpointInfo {
+    pub endpoint_type: &'static str,
+    pub antennas: Vec<(usize, Antenna)>,
 }

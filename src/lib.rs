@@ -1,4 +1,6 @@
-pub mod antenna;
-pub mod distance;
+// #![warn(missing_docs)]
+
 pub mod error;
-pub mod vessel;
+pub mod model;
+pub mod usecase;
+pub mod util;
