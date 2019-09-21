@@ -1,8 +1,15 @@
 [package]
 name = "ksp-commnet-calculator-core"
 version = "0.1.2"
+description = "KSP CommNet Calculator (Core)"
 authors = ["Igaguri <igagurimk@gmail.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
+categories = ["simulation"]
+keywords = ["kerbal_space_program", "ksp", "calculator"]
+readme = "README.md"
+documentation = "https://docs.rs/ksp-commnet-calculator-core"
+repository = "https://github.com/IgaguriMK/ksp-commnet-calculator-core"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
