@@ -1,4 +1,4 @@
-CRATE_NAME:=ksp-commnet-calculator
+CRATE_NAME:=ksp-commnet-calculator-core
 
 DOC_OPTION:=--no-deps
 
@@ -32,7 +32,7 @@ release: check release-build
 
 .PHONY: soft-clean
 soft-clean:
-	cargo clean -p $(CRATE_NAME)
+	- cargo clean -p $(CRATE_NAME)
 
 .PHONY: clean
 clean:
