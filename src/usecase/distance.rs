@@ -78,6 +78,12 @@ impl Runner {
         })
     }
 
+    pub fn antennas(&self) -> &Antennas {
+        &self.antennas
+    }
+
+    #[deprecated(since = "0.1.3", note = "Please use Runner.antennas() instead")]
+    #[allow(deprecated)]
     pub fn antenna_list(&self) {
         println!("Available antennas:");
         self.antennas.print_all("    ");
