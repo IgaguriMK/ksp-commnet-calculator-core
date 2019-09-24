@@ -1,3 +1,6 @@
+use std::fs::File;
+use std::path::Path;
+
 use crate::error::{Error, MessageError};
 use crate::model::antenna::Antennas;
 use crate::model::distance::distances;
@@ -17,6 +20,12 @@ impl Runner {
             from_vessel: Vessel::new(),
             to_vessel: Vessel::new(),
         }
+    }
+
+    pub fn load_antennas<P: AsRef<Path>>(&mut self, path: P) -> Result<(), Error> {
+        let f = File::open(path)?;
+        self.antennas.load(f)?;
+        Ok(())
     }
 
     pub fn add_from_vessel_antenna(
@@ -69,6 +78,12 @@ impl Runner {
         })
     }
 
+    pub fn antennas(&self) -> &Antennas {
+        &self.antennas
+    }
+
+    #[deprecated(since = "0.1.3", note = "Please use Runner.antennas() instead")]
+    #[allow(deprecated)]
     pub fn antenna_list(&self) {
         println!("Available antennas:");
         self.antennas.print_all("    ");

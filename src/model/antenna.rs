@@ -44,6 +44,21 @@ impl Antennas {
         }
     }
 
+    pub fn names(&self) -> Vec<AntennaName> {
+        let mut res = Vec::with_capacity(self.dict.len());
+        for (_, a) in self.dict.iter() {
+            res.push(AntennaName {
+                name: a.name.clone(),
+                aliases: a.aliases.clone(),
+            });
+        }
+        res
+    }
+
+    #[deprecated(
+        since = "0.1.3",
+        note = "Please use Antennas.names() and print list yourself"
+    )]
     pub fn print_all(&self, indent: &str) {
         for (_, a) in self.dict.iter() {
             print!("{}{}", indent, a.name);
@@ -91,4 +106,9 @@ impl Antenna {
             is_dsn: false,
         }
     }
+}
+
+pub struct AntennaName {
+    pub name: String,
+    pub aliases: Vec<String>,
 }
