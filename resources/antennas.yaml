@@ -89,7 +89,7 @@
   combine: true
   relay: true
 -
-  name: RA-105 Relay Antenna
+  name: RA-100 Relay Antenna
   aliases:
     - RA-100
   power: 100000000000
