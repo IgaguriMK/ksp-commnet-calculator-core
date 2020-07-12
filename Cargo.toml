@@ -1,6 +1,6 @@
 [package]
 name = "ksp-commnet-calculator-core"
-version = "0.1.4"
+version = "0.1.5"
 description = "KSP CommNet Calculator (Core)"
 authors = ["Igaguri <igagurimk@gmail.com>"]
 edition = "2018"

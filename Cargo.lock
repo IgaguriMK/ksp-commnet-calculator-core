@@ -7,7 +7,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "ksp-commnet-calculator-core"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "serde 1.0.101 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_yaml 0.8.9 (registry+https://github.com/rust-lang/crates.io-index)",
