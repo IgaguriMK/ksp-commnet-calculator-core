@@ -101,7 +101,7 @@ impl Antenna {
             aliases: Vec::new(),
             power: 5_000.0,
             combine: false,
-            combine_exp: 0.75,
+            combine_exp: default_combine_exp(),
             relay: false,
             is_dsn: false,
         }
