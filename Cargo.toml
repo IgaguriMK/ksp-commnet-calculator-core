@@ -1,6 +1,6 @@
 [package]
 name = "ksp-commnet-calculator-core"
-version = "0.1.6"
+version = "0.2.0"
 description = "KSP CommNet Calculator (Core)"
 authors = ["Igaguri <igagurimk@gmail.com>"]
 edition = "2018"
@@ -16,3 +16,4 @@ repository = "https://github.com/IgaguriMK/ksp-commnet-calculator-core"
 [dependencies]
 serde = {version = "1.0.100", features = ["derive"]}
 serde_yaml = "0.8.9"
+thiserror = "1.0"

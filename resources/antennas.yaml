@@ -26,6 +26,14 @@
   relay: false
   is_dsn: true
 -
+  name: Command Module
+  aliases:
+    - Command
+    - Probe
+  power: 5000
+  combine: false
+  relay: false
+-
   name: Communotron 16
   aliases:
     - "16"

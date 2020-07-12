@@ -1,6 +1,6 @@
 // #![warn(missing_docs)]
 
-pub mod error;
-pub mod model;
-pub mod usecase;
+pub mod antenna;
+pub mod distance;
+pub mod endpoint;
 pub mod util;

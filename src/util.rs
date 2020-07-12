@@ -13,7 +13,7 @@ impl fmt::Display for MetricPrefix {
         } else if x >= 1_000.0 {
             write!(f, "{:.2} k", x / 1_000.0)
         } else {
-            write!(f, "{:.2} m", x)
+            write!(f, "{:.2}", x)
         }
     }
 }

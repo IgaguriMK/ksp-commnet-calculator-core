@@ -1,18 +1,17 @@
-use std::collections::BTreeMap;
 use std::fmt;
 
-use crate::model::antenna::Antenna;
+use crate::antenna::Antenna;
 
 #[derive(Debug, Default, Clone)]
-pub struct Vessel {
+pub struct Endpoint {
     antennas: Vec<Antenna>,
     is_dsn: bool,
 }
 
-impl Vessel {
-    pub fn new() -> Vessel {
-        Vessel {
-            antennas: vec![Antenna::command_module()],
+impl Endpoint {
+    pub fn new() -> Endpoint {
+        Endpoint {
+            antennas: Vec::new(),
             is_dsn: false,
         }
     }
@@ -28,35 +27,39 @@ impl Vessel {
             return;
         }
 
+        if let Some(existing) = self.antennas.get(0) {
+            if existing.is_dsn {
+                return;
+            }
+        }
+
         for _ in 1..count {
             self.antennas.push(antenna.clone());
         }
         self.antennas.push(antenna);
     }
 
-    pub fn info(&self) -> EndpointInfo {
-        let endpoint_type = if self.is_dsn { "DSN" } else { "Vessel" };
+    pub fn antennas(&self) -> impl Iterator<Item = &Antenna> {
+        self.antennas.iter()
+    }
 
-        let mut counts = BTreeMap::<String, (usize, Antenna)>::new();
-        for a in &self.antennas {
-            counts
-                .entry(a.name.clone())
-                .and_modify(|(c, _)| *c += 1)
-                .or_insert((1, a.clone()));
-        }
-
-        let antennas = counts.into_iter().map(|v| v.1).collect();
-
-        EndpointInfo {
-            endpoint_type,
-            antennas,
+    pub fn antenna_counts(&self) -> impl Iterator<Item = (&Antenna, usize)> {
+        Counts {
+            antennas: self.antennas.as_slice(),
+            idx: 0,
         }
     }
 
-    pub fn range_to(&self, other: &Vessel) -> Range {
-        Range {
-            distance: (self.power() * other.power()).sqrt(),
+    pub fn endpoint_type(&self) -> &str {
+        if self.is_dsn {
+            "DSN"
+        } else {
+            "Vessel"
         }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.antennas.is_empty()
     }
 
     pub fn power(&self) -> f64 {
@@ -68,11 +71,17 @@ impl Vessel {
                 .powf(self.average_combinability_exponent())
     }
 
+    pub fn range_to(&self, other: &Endpoint) -> Range {
+        Range {
+            distance: (self.power() * other.power()).sqrt(),
+        }
+    }
+
     fn strongest_antenna(&self) -> &Antenna {
         self.antennas
             .iter()
             .max_by_key(|a| a.power as u64)
-            .expect("vessel shoud have default command module antenna.")
+            .expect("vessel shoud have antenna.")
     }
 
     fn average_combinability_exponent(&self) -> f64 {
@@ -83,6 +92,38 @@ impl Vessel {
             d += a.power;
         }
         u / d
+    }
+}
+
+#[derive(Debug)]
+pub struct Counts<'a> {
+    antennas: &'a [Antenna],
+    idx: usize,
+}
+
+impl<'a> Iterator for Counts<'a> {
+    type Item = (&'a Antenna, usize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.idx == self.antennas.len() {
+            return None;
+        }
+
+        let antenna = &self.antennas[self.idx];
+        self.idx += 1;
+        let mut count = 1;
+
+        while self.idx < self.antennas.len() {
+            let a = &self.antennas[self.idx];
+            if a.name != antenna.name {
+                break;
+            }
+
+            self.idx += 1;
+            count += 1;
+        }
+
+        Some((antenna, count))
     }
 }
 
@@ -121,10 +162,4 @@ impl fmt::Display for Range {
             write!(f, "{:.2} m", d)
         }
     }
-}
-
-#[derive(Debug, Clone)]
-pub struct EndpointInfo {
-    pub endpoint_type: &'static str,
-    pub antennas: Vec<(usize, Antenna)>,
 }
